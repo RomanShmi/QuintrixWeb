@@ -14,16 +14,28 @@ namespace QuintrixWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+
+
+        private static IList<State> _allStates;
+        private static SelectList _statesData;
+
+
         public NewPlayersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+
+
+
+
+
+
+
+
+
+
         // GET: NewPlayers
-
-        
-
-
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.NewPlayers.Include(n => n.State);
