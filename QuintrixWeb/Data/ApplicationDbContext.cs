@@ -94,11 +94,14 @@ namespace QuintrixWeb.Data
             });
 
 
-
-
-
-
-
+            modelBuilder.Entity<NewPlayer>(x =>
+            {
+                x.HasData(
+              new NewPlayer() { Id = 5, Name = "Seed1", Email = "seed1@seed.ss", Level = 7, StateId = 8 },
+               new NewPlayer() { Id = 6, Name = "Seed2", Level = 7, Email = "seed2@seed.ss", StateId = 12 },
+               new NewPlayer() { Id = 7, Name = "Seed3", Level = 9, Email = "seed3@seed.ss", StateId = 23 }
+               );
+            });
 
 
         }
