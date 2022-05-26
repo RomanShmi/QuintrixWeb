@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,30 +15,27 @@ namespace QuintrixWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-
-
-        private static IList<State> _allStates;
-        private static SelectList _statesData;
-
-
         public NewPlayersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
 
+        private async Task UpdateStateAndResetModelState(NewPlayer newPlayer)
+        {
+            ModelState.Clear();
+            var state = _context.State.SingleOrDefault(x => x.Id == newPlayer.StateId);
+            newPlayer.State = state;
+            TryValidateModel(newPlayer);
+        }
 
 
-
-
-
-
-
-
-
+        [Authorize]
         // GET: NewPlayers
         public async Task<IActionResult> Index()
         {
+           // Console.WriteLine((_context.UserLogins.Find(3,3)).ToString());
+
             var applicationDbContext = _context.NewPlayers.Include(n => n.State);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -75,7 +73,8 @@ namespace QuintrixWeb.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Level,Email,StateId")] NewPlayer newPlayer)
         {
-  
+
+            await UpdateStateAndResetModelState(newPlayer);
             if (ModelState.IsValid)
             {
                 _context.Add(newPlayer);
@@ -114,6 +113,7 @@ namespace QuintrixWeb.Controllers
             {
                 return NotFound();
             }
+            await UpdateStateAndResetModelState(newPlayer);
 
             if (ModelState.IsValid)
             {
@@ -147,6 +147,7 @@ namespace QuintrixWeb.Controllers
                 return NotFound();
             }
 
+            
             var newPlayer = await _context.NewPlayers
                 .Include(n => n.State)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -172,11 +173,11 @@ namespace QuintrixWeb.Controllers
             {
                 _context.NewPlayers.Remove(newPlayer);
             }
-            
+        
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+    
         private bool NewPlayerExists(int id)
         {
           return (_context.NewPlayers?.Any(e => e.Id == id)).GetValueOrDefault();
