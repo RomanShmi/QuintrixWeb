@@ -32,16 +32,16 @@ namespace QuintrixWeb.Controllers
 
         [Authorize]
         // GET: NewPlayers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string userId)
         {
-           // Console.WriteLine((_context.UserLogins.Find(3,3)).ToString());
+           
 
             var applicationDbContext = _context.NewPlayers.Include(n => n.State);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: NewPlayers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string userId)
         {
             if (id == null || _context.NewPlayers == null)
             {
@@ -60,7 +60,7 @@ namespace QuintrixWeb.Controllers
         }
 
         // GET: NewPlayers/Create
-        public IActionResult Create()
+        public IActionResult Create(string userId)
         {
             ViewData["StateId"] = new SelectList(_context.State, "Id", "Abbreviation");
             return View();
@@ -71,7 +71,7 @@ namespace QuintrixWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Level,Email,StateId")] NewPlayer newPlayer)
+        public async Task<IActionResult> Create([Bind("Id,Name,Level,Email,StateId")] NewPlayer newPlayer, string userId)
         {
 
             await UpdateStateAndResetModelState(newPlayer);
@@ -86,7 +86,7 @@ namespace QuintrixWeb.Controllers
         }
 
         // GET: NewPlayers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string userId)
         {
             if (id == null || _context.NewPlayers == null)
             {
@@ -107,7 +107,7 @@ namespace QuintrixWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Level,Email,StateId")] NewPlayer newPlayer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Level,Email,StateId")] NewPlayer newPlayer, string userId)
         {
             if (id != newPlayer.Id)
             {
@@ -140,7 +140,7 @@ namespace QuintrixWeb.Controllers
         }
 
         // GET: NewPlayers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, string userId)
         {
             if (id == null || _context.NewPlayers == null)
             {
@@ -162,7 +162,7 @@ namespace QuintrixWeb.Controllers
         // POST: NewPlayers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string userId)
         {
             if (_context.NewPlayers == null)
             {
@@ -180,7 +180,7 @@ namespace QuintrixWeb.Controllers
     
         private bool NewPlayerExists(int id)
         {
-          return (_context.NewPlayers?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.NewPlayers?.Any(e => e.Id == id )).GetValueOrDefault();
         }
     }
 }

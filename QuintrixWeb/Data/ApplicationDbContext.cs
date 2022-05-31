@@ -5,7 +5,7 @@ using QuintrixWeb.Models;
 
 namespace QuintrixWeb.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         private static IConfigurationRoot _configuration;
 
